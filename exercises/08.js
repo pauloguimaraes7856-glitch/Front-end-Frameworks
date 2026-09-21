@@ -10,6 +10,20 @@ const BASE_URL = "https://jsonplaceholder.typicode.com";
 //    - returns the first 5 items
 //    - logs each item's title
 
+async function fetchPosts() {
+  try {
+    const response = await fetch(BASE_URL + "/posts");
+    const posts = await response.json();
+    const firstFive = posts.slice(0, 5);
+
+    firstFive.forEach((post) => console.log(post.title));
+
+    return firstFive;
+  } catch (error) {
+    console.log("Failed to load posts");
+  }
+}
+
 // 2. Add try/catch to fetchPosts().
 //    If the fetch fails, log "Failed to load posts".
 
@@ -18,5 +32,22 @@ const BASE_URL = "https://jsonplaceholder.typicode.com";
 //    - throws an Error if res.ok is false
 //    - returns the parsed JSON object
 
-// Call getPostById(1) and log the result.
-// Call getPostById(99999) — what happens? Handle it.
+async function getPostById(id) {
+  const res = await fetch(BASE_URL + "/posts/" + id);
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch post ${id}`);
+  }
+
+  return res.json();
+}
+
+fetchPosts();
+
+getPostById(1)
+  .then((post) => console.log(post))
+  .catch((error) => console.log(error.message));
+
+getPostById(99999)
+  .then((post) => console.log(post))
+  .catch((error) => console.log(error.message));
